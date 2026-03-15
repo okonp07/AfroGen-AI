@@ -11,6 +11,9 @@ class AfroGenRecord:
     file_name: str
     image_path: str
     prompt: str
+    slice_name: str = "phase3_research_v1"
+    source_dataset: str = "unknown"
+    curation_batch: str = "unassigned"
     gender_presentation: str = "unknown"
     age_group: str = "adult"
     skin_tone: str = "medium"
@@ -67,6 +70,13 @@ def _read_metadata(metadata_path: Path) -> dict[str, dict]:
         return rows
 
 
+def _find_metadata_for_image(image_path: Path) -> Path | None:
+    for candidate in (image_path.parent / "metadata.csv", image_path.parents[1] / "metadata.csv"):
+        if candidate.exists():
+            return candidate
+    return None
+
+
 def _infer_split(file_name: str) -> str:
     lowered = file_name.lower()
     if "val" in lowered or "valid" in lowered:
@@ -95,10 +105,18 @@ def build_manifest(
 
     records: list[AfroGenRecord] = []
     for path in image_paths:
+        local_metadata_path = _find_metadata_for_image(path)
+        local_metadata = _read_metadata(local_metadata_path) if local_metadata_path else {}
         meta = metadata_rows.get(path.name, {})
+        if not meta:
+            meta = local_metadata.get(path.name, {})
+        batch_name = path.parent.name if path.parent != full_raw_dir else "root"
         record_data = {
             "file_name": path.name,
             "image_path": str(path.relative_to(project_root)),
+            "slice_name": meta.get("slice_name", "phase3_research_v1") or "phase3_research_v1",
+            "source_dataset": meta.get("source_dataset", batch_name) or batch_name,
+            "curation_batch": meta.get("curation_batch", batch_name) or batch_name,
             "gender_presentation": meta.get("gender_presentation", "unknown") or "unknown",
             "age_group": meta.get("age_group", "adult") or "adult",
             "skin_tone": meta.get("skin_tone", "medium") or "medium",

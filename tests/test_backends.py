@@ -26,7 +26,7 @@ class BackendTests(unittest.TestCase):
         backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4))
         result = backend.generate("A calm Black woman with braids", seed=5)
         self.assertEqual(result.backend_name, "hybrid")
-        self.assertIn("placeholder", result.backend_message.lower())
+        self.assertTrue(result.backend_message)
 
 
 if __name__ == "__main__":

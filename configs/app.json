@@ -10,7 +10,9 @@
     "raw_dir": "data/raw",
     "processed_dir": "data/processed",
     "manifest_path": "data/processed/manifest.jsonl",
-    "image_extensions": [".jpg", ".jpeg", ".png", ".webp"]
+    "image_extensions": [".jpg", ".jpeg", ".png", ".webp"],
+    "slice_registry_path": "data/processed/slice_registry.json",
+    "curation_batch_dir": "data/raw/batches"
   },
   "training": {
     "artifacts_dir": "models",
@@ -21,6 +23,8 @@
     "dataset_slice_name": "phase3_research_v1",
     "baseline_model_family": "sdxl-lora-plus-latent-editor",
     "minimum_train_records": 5000,
-    "minimum_validation_records": 500
+    "minimum_validation_records": 500,
+    "run_plan_path": "models/training_run_plan.json",
+    "artifact_stub_path": "models/trained_backend_stub.json"
   }
 }

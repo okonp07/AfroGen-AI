@@ -59,6 +59,13 @@ python3 scripts/phase3_strategy.py
 python3 scripts/training_readiness.py
 ```
 
+6. Register a first curated batch and create a training stub:
+
+```bash
+python3 scripts/register_curation_batch.py
+python3 scripts/build_training_stub.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
@@ -77,6 +84,15 @@ The first real research baseline is now explicitly defined in the repo:
 - target backend: `hybrid`
 - model strategy: `latent-diffusion-plus-editor`
 - baseline family: `sdxl-lora-plus-latent-editor`
+
+## Stage 4 Foundation
+
+Stage 4 starts the executable training path:
+
+- curation batches can be registered into a slice registry
+- manifests now carry `slice_name`, `source_dataset`, and `curation_batch`
+- a training run plan can be generated from the current manifest
+- a backend artifact stub can be written to `models/` for the trained backend contract
 
 ## Why This Version Matters
 
