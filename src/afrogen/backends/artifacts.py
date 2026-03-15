@@ -57,19 +57,22 @@ def validate_backend_artifact(artifact: BackendArtifact | None, project_root: Pa
     if artifact.status == "stub":
         return "stub", artifact.message
 
+    if not artifact.supports_prompt_generation:
+        return "incomplete_inference_contract", "Artifact metadata does not declare prompt-generation support yet."
+
+    if not artifact.scheduler_name.strip():
+        return "incomplete_inference_contract", "Artifact metadata exists, but no scheduler name has been declared."
+
+    if artifact.hosted_model_id.strip():
+        return "ready_for_hosted_inference", "Hosted model metadata is available for hybrid inference."
+
     checkpoint = artifact.checkpoint_path.strip()
     if not checkpoint:
-        return "metadata_only", "Artifact metadata exists, but no checkpoint path has been declared yet."
+        return "metadata_only", "Artifact metadata exists, but no checkpoint path or hosted model has been declared yet."
 
     checkpoint_path = resolve_artifact_reference(checkpoint, project_root)
     if not checkpoint_path.exists():
         return "checkpoint_missing", f"Artifact metadata points to a checkpoint that is not available: {checkpoint}"
-
-    if not artifact.supports_prompt_generation:
-        return "incomplete_inference_contract", "Checkpoint exists, but the artifact does not declare prompt-generation support yet."
-
-    if not artifact.scheduler_name.strip():
-        return "incomplete_inference_contract", "Checkpoint exists, but no scheduler name has been declared."
 
     if artifact.supports_latent_editing and artifact.latent_editor_path.strip():
         latent_editor_path = resolve_artifact_reference(artifact.latent_editor_path, project_root)

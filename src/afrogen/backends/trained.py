@@ -49,7 +49,7 @@ class TrainedAfroGenBackend:
         backend_name = self.name
         backend_message = self._backend_message()
 
-        if self.rollout_state != "ready_for_inference":
+        if self.rollout_state not in {"ready_for_inference", "ready_for_hosted_inference"}:
             image = self._render_placeholder(prompt=prompt)
         elif not self.artifact_metadata or not self.artifact_metadata.hosted_model_id.strip():
             image = self._render_placeholder(prompt=prompt)
