@@ -37,11 +37,13 @@ AfroGen-AI has moved from a notebook-only research repo into a structured, deplo
 - Hugging Face model repo created:
   `okonp007/afrogen-models`
 - app pushed to the Hugging Face Space repo
-- initial model bundle pushed to the Hugging Face model repo
+- metadata-complete hosted hybrid artifact pushed to the Hugging Face model repo
 - Space build issues fixed for:
   - README YAML metadata
   - `gradio` compatibility
   - `huggingface_hub` compatibility
+- Space updated to run the latest hosted hybrid backend code
+- `HF_TOKEN` configured as a Space secret for hosted inference
 
 ## Current Live Resources
 
@@ -52,13 +54,15 @@ AfroGen-AI has moved from a notebook-only research repo into a structured, deplo
 - Hugging Face model repo:
   `https://huggingface.co/okonp007/afrogen-models`
 
-## Current Expected Runtime Mode
+## Current Live Runtime Mode
 
-The live Space should currently be treated as:
+The live Space is currently running as:
 
-- backend: `synthetic`
+- backend: `hybrid`
+- artifact path: `hf://okonp007/afrogen-models/trained_backend_stub.json`
+- hosted model id: `black-forest-labs/FLUX.1-schnell`
 
-This is still the correct safe state until a metadata-complete hybrid artifact with hosted model metadata is published and validated.
+The app now resolves a hosted hybrid backend artifact from the Hugging Face model repo and attempts real model-backed generation first, with synthetic fallback still available if hosted inference fails.
 
 ## Important Completed Milestones
 
@@ -71,15 +75,15 @@ This is still the correct safe state until a metadata-complete hybrid artifact w
 
 ### Highest Priority
 
-- test the live Space UI manually
-- confirm `AFROGEN_BACKEND=synthetic` in Space settings
 - rotate the Hugging Face token because it was pasted into chat
+- continue testing live hybrid generation quality and prompt behavior
+- monitor whether hosted inference consistently avoids synthetic fallback
 
 ### Next Engineering Milestone
 
-- publish a metadata-complete hybrid artifact to `okonp007/afrogen-models`
-- populate hosted model metadata such as `hosted_model_id` in that artifact
-- validate the live Space with `AFROGEN_BACKEND=hybrid`
+- improve the quality and reliability of the hosted hybrid generation path
+- evaluate stronger hosted model options or better prompt conditioning
+- decide whether to keep using hosted inference or move toward a fine-tuned checkpoint path
 
 ### Real Model Work Still Needed
 
@@ -94,11 +98,10 @@ The next best phase is:
 
 ### Live Hybrid Preparation
 
-- verify Space settings
-- publish a metadata-complete artifact using the checkpoint metadata template
-- include hosted model metadata for the deployed Hugging Face inference endpoint/model
-- keep backend on `synthetic` until the hybrid artifact validates cleanly
-- then switch the live Space to `hybrid` and validate fallback behavior
+- test live prompt-to-image generations on the Hugging Face Space frontend
+- refine hosted model metadata and prompt defaults based on observed output quality
+- reduce fallback frequency and improve production observability
+- continue toward afrocentric fine-tuning and checkpoint-backed artifacts
 
 ## Repo Recovery Guidance
 
