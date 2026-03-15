@@ -10,9 +10,28 @@ pinned: false
 
 # AfroGen-AI
 
-AfroGen-AI is a reproducible MVP for generating synthetic afrocentric portrait concepts from text prompts and interactively editing a latent control matrix in a cloud-ready UI.
+AfroGen-AI is a cloud-deployed prompt-to-portrait app for afrocentric image generation with editable latent controls.
 
-This version replaces the earlier notebook-only experiments with a proper project structure that we can extend into a trained prompt-to-image system.
+This repository now powers the live Hugging Face Space frontend:
+
+- Frontend: [https://huggingface.co/spaces/okonp007/AfroGen-AI](https://huggingface.co/spaces/okonp007/AfroGen-AI)
+- GitHub repo: [https://github.com/okonp07/AfroGen-AI](https://github.com/okonp07/AfroGen-AI)
+- Model repo: [https://huggingface.co/okonp007/afrogen-models](https://huggingface.co/okonp007/afrogen-models)
+
+The project started as a structured MVP scaffold and now includes a live hosted hybrid inference path backed by a Hugging Face model artifact.
+
+## Current Live State
+
+The app is currently deployed and working on Hugging Face Spaces.
+
+- the frontend is live on Hugging Face Spaces
+- the app is configured to use the `hybrid` backend
+- backend artifact resolution runs through `hf://okonp007/afrogen-models/trained_backend_stub.json`
+- the hybrid backend supports hosted Hugging Face image generation through `hosted_model_id`
+- local latent-driven edits are still applied after hosted generation
+- synthetic fallback remains available if hosted inference fails
+
+At the moment, the live rollout is focused on proving hosted model-backed generation and preserving the controllable latent editing workflow end to end.
 
 ## Current MVP
 
@@ -21,6 +40,7 @@ The current MVP includes:
 - prompt parsing for portrait attributes such as age, skin tone, hairstyle, mood, and accessories
 - a deterministic latent control matrix that can be edited in the UI
 - a synthetic portrait renderer that updates as the latent matrix changes
+- a hosted Hugging Face hybrid backend path for real model-backed generation
 - a Gradio app entrypoint for Hugging Face Spaces deployment
 - a Streamlit app for local development
 - a dataset manifest pipeline for training-ready metadata
@@ -176,18 +196,20 @@ This repo now acts as a real foundation for the full product:
 - reproducible package layout
 - deterministic generation pipeline
 - testable latent editing logic
-- Streamlit UX for prompt-based image generation
+- local Streamlit UX for prompt-based image generation
+- live Hugging Face Space deployment with hosted hybrid inference
 
-The next major milestone is publishing a metadata-complete hybrid artifact and validating the live Space switch to the hosted hybrid backend.
+The next major milestone is improving generation quality with a stronger hosted model, better prompt conditioning, and future fine-tuned afrocentric checkpoints.
 
 ## Hugging Face Spaces
 
-This repo is now prepared for Hugging Face Spaces with:
+This repo now runs on Hugging Face Spaces with:
 
 - root-level `app.py` Gradio entrypoint
 - README front matter for Spaces configuration
 - support for backend artifact paths that point to local files or Hugging Face Hub references
 - env overrides for Space variables like `AFROGEN_BACKEND` and `AFROGEN_ARTIFACT_PATH`
+- a live frontend at [https://huggingface.co/spaces/okonp007/AfroGen-AI](https://huggingface.co/spaces/okonp007/AfroGen-AI)
 
 Supported artifact formats:
 
