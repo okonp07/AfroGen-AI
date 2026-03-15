@@ -3,6 +3,18 @@
     "title": "AfroGen-AI MVP",
     "image_size": 512,
     "latent_shape": [4, 4],
-    "export_dir": "outputs"
+    "export_dir": "outputs",
+    "backend": "synthetic"
+  },
+  "dataset": {
+    "raw_dir": "data/raw",
+    "processed_dir": "data/processed",
+    "manifest_path": "data/processed/manifest.jsonl",
+    "image_extensions": [".jpg", ".jpeg", ".png", ".webp"]
+  },
+  "training": {
+    "artifacts_dir": "models",
+    "default_manifest_path": "data/processed/manifest.jsonl",
+    "future_backends": ["synthetic", "diffusion", "hybrid"]
   }
 }

@@ -12,6 +12,8 @@ The current MVP includes:
 - a deterministic latent control matrix that can be edited in the UI
 - a synthetic portrait renderer that updates as the latent matrix changes
 - a Streamlit app scaffold designed to accept a real model backend later
+- a dataset manifest pipeline for training-ready metadata
+- backend abstractions so a trained model can replace the synthetic backend cleanly
 
 ## Project Structure
 
@@ -43,6 +45,21 @@ pip install -r requirements.txt
 streamlit run app/streamlit_app.py
 ```
 
+4. Build a training manifest from local images:
+
+```bash
+python3 scripts/prepare_dataset.py
+```
+
+## Phase 2 Foundation
+
+Phase 2 adds the bridge toward a real model project:
+
+- `scripts/prepare_dataset.py` scans `data/raw/` and writes `data/processed/manifest.jsonl`
+- `src/afrogen/data/` defines the dataset schema and prompt generation utilities
+- `src/afrogen/backends/` defines the inference backend contract
+- the Streamlit app now talks to a backend factory instead of hardcoding the synthetic pipeline
+
 ## Why This Version Matters
 
 This repo now acts as a real foundation for the full product:
@@ -52,4 +69,4 @@ This repo now acts as a real foundation for the full product:
 - testable latent editing logic
 - Streamlit UX for prompt-based image generation
 
-The next major milestone is replacing the synthetic renderer with a trained afrocentric face model.
+The next major milestone is implementing the trained backend so the current app can switch from the synthetic renderer to a real afrocentric face model without changing the UI contract.

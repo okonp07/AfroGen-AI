@@ -15,6 +15,8 @@ class GenerationResult:
     base_latent: np.ndarray
     edited_latent: np.ndarray
     image: object
+    backend_name: str = "synthetic"
+    backend_message: str = ""
 
 
 class AfroGenPipeline:
@@ -32,4 +34,6 @@ class AfroGenPipeline:
             base_latent=base_latent,
             edited_latent=edited_latent,
             image=image,
+            backend_name="synthetic",
+            backend_message="Synthetic backend active. Replace through the backend factory when a trained model is ready.",
         )

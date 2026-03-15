@@ -13,14 +13,15 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from afrogen import load_app_config
-from afrogen.generation import AfroGenPipeline
+from afrogen.backends import create_backend
 from afrogen.ui.state import ensure_delta_state
 
 
 config = load_app_config()
 app_config = config["app"]
 latent_shape = tuple(app_config["latent_shape"])
-pipeline = AfroGenPipeline(
+backend = create_backend(
+    name=app_config["backend"],
     image_size=app_config["image_size"],
     latent_shape=latent_shape,
 )
@@ -29,6 +30,7 @@ pipeline = AfroGenPipeline(
 st.set_page_config(page_title=app_config["title"], layout="wide")
 st.title(app_config["title"])
 st.caption("Prompt-to-portrait MVP with editable latent controls.")
+st.caption(f"Active backend: `{backend.info.name}`")
 
 with st.sidebar:
     st.subheader("Generation")
@@ -64,11 +66,13 @@ with right:
         st.session_state.latent_delta = np.zeros(latent_shape, dtype=np.float32)
         st.rerun()
 
-result = pipeline.generate(prompt=prompt, seed=int(seed), delta=delta)
+result = backend.generate(prompt=prompt, seed=int(seed), delta=delta)
 
 with left:
     st.subheader("Generated Portrait")
     st.image(result.image, use_container_width=True)
+    if result.backend_message:
+        st.info(result.backend_message)
     st.write("Prompt profile:")
     st.json(
         {
