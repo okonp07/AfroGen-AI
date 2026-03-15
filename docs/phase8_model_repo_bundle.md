@@ -4,7 +4,7 @@
 
 Prepare a clean bundle that can be uploaded to the Hugging Face model repo:
 
-`okonp07/afrogen-models`
+`okonp007/afrogen-models`
 
 ## Bundle Contents
 

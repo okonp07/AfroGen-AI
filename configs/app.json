@@ -5,7 +5,7 @@
     "latent_shape": [4, 4],
     "export_dir": "outputs",
     "backend": "synthetic",
-    "trained_backend_artifact": "hf://okonp07/afrogen-models/trained_backend_stub.json",
+    "trained_backend_artifact": "hf://okonp007/afrogen-models/trained_backend_stub.json",
     "default_prompt": "A smiling young Black woman with braids, golden earrings, and a calm studio portrait"
   },
   "dataset": {

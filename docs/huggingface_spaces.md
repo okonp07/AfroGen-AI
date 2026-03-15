@@ -35,12 +35,12 @@ When the app sees an `hf://` artifact path, it downloads the file with `hf_hub_d
 
 Example:
 
-- app repo: `okonp07/AfroGen-AI`
-- model repo: `okonp07/afrogen-models`
+- app repo: `okonp007/AfroGen-AI`
+- model repo: `okonp007/afrogen-models`
 
 The current repo config now defaults to:
 
-`hf://okonp07/afrogen-models/trained_backend_stub.json`
+`hf://okonp007/afrogen-models/trained_backend_stub.json`
 
 ## Suggested Secrets
 

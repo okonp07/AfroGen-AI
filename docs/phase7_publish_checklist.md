@@ -2,8 +2,8 @@
 
 ## Assumed Repositories
 
-- Space repo: `okonp07/AfroGen-AI`
-- Model repo: `okonp07/afrogen-models`
+- Space repo: `okonp007/AfroGen-AI`
+- Model repo: `okonp007/afrogen-models`
 
 ## What Is Already Configured
 
@@ -11,7 +11,7 @@
 - `app.py` is the Gradio entrypoint
 - the default artifact path points to:
 
-`hf://okonp07/afrogen-models/trained_backend_stub.json`
+`hf://okonp007/afrogen-models/trained_backend_stub.json`
 
 ## Step 1. Create the Hugging Face Space
 
@@ -26,7 +26,7 @@ This matches Hugging Face’s Spaces configuration model, which is driven from t
 
 Create a model repository named:
 
-`okonp07/afrogen-models`
+`okonp007/afrogen-models`
 
 Upload at least:
 

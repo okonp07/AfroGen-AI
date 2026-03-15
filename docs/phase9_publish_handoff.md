@@ -14,7 +14,7 @@ This phase answers three questions clearly:
 
 Use the app repository:
 
-- `okonp07/AfroGen-AI`
+- `okonp007/AfroGen-AI`
 
 The Space should point at this repo and use:
 
@@ -25,7 +25,7 @@ The Space should point at this repo and use:
 
 Use the model repository:
 
-- `okonp07/afrogen-models`
+- `okonp007/afrogen-models`
 
 Upload the contents of:
 
@@ -42,7 +42,7 @@ That currently includes:
 For the initial live test:
 
 - `AFROGEN_BACKEND=synthetic`
-- `AFROGEN_ARTIFACT_PATH=hf://okonp07/afrogen-models/trained_backend_stub.json`
+- `AFROGEN_ARTIFACT_PATH=hf://okonp007/afrogen-models/trained_backend_stub.json`
 
 Optional:
 

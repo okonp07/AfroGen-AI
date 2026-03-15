@@ -31,7 +31,7 @@ class ArtifactResolutionTests(unittest.TestCase):
             downloaded.write_text("{}", encoding="utf-8")
             with patch("afrogen.backends.resolve._download_from_hub", return_value=str(downloaded)) as mocked:
                 resolved = resolve_artifact_reference(
-                    "hf://okonp07/afrogen-models/trained_backend_stub.json",
+                    "hf://okonp007/afrogen-models/trained_backend_stub.json",
                     Path(temp_dir),
                 )
                 self.assertEqual(resolved, downloaded)

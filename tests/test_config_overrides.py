@@ -29,7 +29,7 @@ class ConfigOverrideTests(unittest.TestCase):
             os.environ,
             {
                 "AFROGEN_BACKEND": "hybrid",
-                "AFROGEN_ARTIFACT_PATH": "hf://okonp07/afrogen-models/trained_backend_stub.json",
+                "AFROGEN_ARTIFACT_PATH": "hf://okonp007/afrogen-models/trained_backend_stub.json",
                 "AFROGEN_DEFAULT_PROMPT": "cloud prompt",
                 "AFROGEN_DEVICE": "cuda",
             },
@@ -39,7 +39,7 @@ class ConfigOverrideTests(unittest.TestCase):
         self.assertEqual(updated["app"]["backend"], "hybrid")
         self.assertEqual(
             updated["app"]["trained_backend_artifact"],
-            "hf://okonp07/afrogen-models/trained_backend_stub.json",
+            "hf://okonp007/afrogen-models/trained_backend_stub.json",
         )
         self.assertEqual(updated["app"]["default_prompt"], "cloud prompt")
         self.assertEqual(updated["inference"]["default_device"], "cuda")
