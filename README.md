@@ -117,7 +117,8 @@ python3 scripts/inspect_backend_artifact.py
 13. Export a metadata-complete checkpoint bundle:
 
 ```bash
-python3 scripts/export_checkpoint_metadata.py
+python3 scripts/export_checkpoint_metadata.py \
+  --hosted-model-id black-forest-labs/FLUX.1-schnell
 ```
 
 14. Inspect the live Hugging Face Space:

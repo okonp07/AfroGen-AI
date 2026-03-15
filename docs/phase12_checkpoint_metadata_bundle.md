@@ -31,6 +31,21 @@ This writes a metadata-complete artifact bundle to:
 
 - `outputs/checkpoint_metadata_bundle/`
 
+The exported artifact uses the model-repo filename expected by the app:
+
+- `trained_backend_stub.json`
+
+You can also populate hosted inference metadata at export time, for example:
+
+```bash
+python3 scripts/export_checkpoint_metadata.py \
+  --hosted-model-id black-forest-labs/FLUX.1-schnell \
+  --prompt-prefix "afrocentric studio portrait, ultra detailed" \
+  --negative-prompt "blurry, distorted hands" \
+  --guidance-scale 3.5 \
+  --num-inference-steps 6
+```
+
 ## Expected Use
 
 1. Update the template values to match the real model repo contents.
