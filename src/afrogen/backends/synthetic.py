@@ -16,6 +16,7 @@ class SyntheticAfroGenBackend:
             editable_latent=True,
             ready_for_training=False,
             load_state="ready",
+            rollout_state="ready_for_inference",
         )
 
     def generate(self, prompt: str, seed: int = 7, delta: np.ndarray | None = None) -> GenerationResult:

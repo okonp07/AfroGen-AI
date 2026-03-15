@@ -108,6 +108,12 @@ python3 scripts/export_model_repo_bundle.py
 python3 scripts/publish_handoff.py
 ```
 
+12. Inspect backend rollout lifecycle states:
+
+```bash
+python3 scripts/inspect_backend_artifact.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:

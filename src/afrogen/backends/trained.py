@@ -8,7 +8,7 @@ from afrogen.generation.latent import apply_delta, build_latent_matrix
 from afrogen.generation.pipeline import GenerationResult
 from afrogen.generation.prompting import parse_prompt
 
-from .artifacts import BackendArtifact, load_backend_artifact
+from .artifacts import BackendArtifact, load_backend_artifact, validate_backend_artifact
 from .base import BackendInfo
 from .resolve import resolve_artifact_reference
 
@@ -28,12 +28,14 @@ class TrainedAfroGenBackend:
         self.artifact_reference = artifact_path or "models/trained_backend_stub.json"
         self.artifact_path = resolve_artifact_reference(self.artifact_reference, self.project_root)
         self.artifact_metadata = self._load_artifact_metadata()
+        self.rollout_state, self.rollout_message = validate_backend_artifact(self.artifact_metadata, self.project_root)
         self.info = BackendInfo(
             name=name,
             description="Placeholder backend for the future trained afrocentric face model.",
             editable_latent=True,
             ready_for_training=True,
             load_state=self._load_state(),
+            rollout_state=self.rollout_state,
         )
 
     def generate(self, prompt: str, seed: int = 7, delta: np.ndarray | None = None) -> GenerationResult:
@@ -62,12 +64,13 @@ class TrainedAfroGenBackend:
         if not self.artifact_metadata:
             return "Trained backend placeholder. Run scripts/build_training_stub.py to create the first backend artifact stub."
         prefix = f"Artifact status: {self.artifact_metadata.status}."
-        return f"{prefix} {self.artifact_metadata.message}"
+        return f"{prefix} {self.artifact_metadata.message} Rollout state: {self.rollout_state}. {self.rollout_message}"
 
     def summary(self) -> dict:
         return {
             "backend_name": self.name,
             "load_state": self.info.load_state,
+            "rollout_state": self.info.rollout_state,
             "artifact_path": str(self.artifact_path),
             "checkpoint_path": self.artifact_metadata.checkpoint_path if self.artifact_metadata else "",
             "latent_editor_path": self.artifact_metadata.latent_editor_path if self.artifact_metadata else "",
@@ -80,6 +83,7 @@ class TrainedAfroGenBackend:
         text = [
             f"Backend: {self.name}",
             f"Status: {self.info.load_state}",
+            f"Rollout: {self.info.rollout_state}",
             "Next step:",
             "Load a trained model",
             "and keep the same",

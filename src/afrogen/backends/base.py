@@ -15,6 +15,7 @@ class BackendInfo:
     editable_latent: bool
     ready_for_training: bool
     load_state: str = "missing"
+    rollout_state: str = "stub"
 
 
 class AfroGenBackend(Protocol):
