@@ -96,6 +96,12 @@ python3 scripts/inspect_backend_artifact.py
 python3 scripts/space_readiness.py
 ```
 
+10. Export the Hugging Face model-repo bundle:
+
+```bash
+python3 scripts/export_model_repo_bundle.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
