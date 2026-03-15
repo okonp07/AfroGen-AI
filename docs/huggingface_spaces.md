@@ -38,11 +38,17 @@ Example:
 - app repo: `okonp07/AfroGen-AI`
 - model repo: `okonp07/afrogen-models`
 
+The current repo config now defaults to:
+
+`hf://okonp07/afrogen-models/trained_backend_stub.json`
+
 ## Suggested Secrets
 
 If you use a private model repo, set:
 
 - `HF_TOKEN`
+- optionally `AFROGEN_ARTIFACT_PATH`
+- optionally `AFROGEN_BACKEND`
 
 ## What To Upload To The Model Repo
 

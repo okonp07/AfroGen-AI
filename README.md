@@ -90,6 +90,12 @@ python3 scripts/build_training_stub.py
 python3 scripts/inspect_backend_artifact.py
 ```
 
+9. Check Hugging Face Spaces readiness:
+
+```bash
+python3 scripts/space_readiness.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
@@ -136,6 +142,7 @@ This repo is now prepared for Hugging Face Spaces with:
 - root-level `app.py` Gradio entrypoint
 - README front matter for Spaces configuration
 - support for backend artifact paths that point to local files or Hugging Face Hub references
+- env overrides for Space variables like `AFROGEN_BACKEND` and `AFROGEN_ARTIFACT_PATH`
 
 Supported artifact formats:
 
