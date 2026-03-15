@@ -10,6 +10,9 @@ pinned: false
 
 # AfroGen-AI
 
+
+- APP LINK: [https://huggingface.co/spaces/okonp007/AfroGen-AI](https://huggingface.co/spaces/okonp007/AfroGen-AI)
+
 AfroGen-AI is a cloud-deployed prompt-to-portrait app for afrocentric image generation with editable latent controls.
 
 This repository now powers the live Hugging Face Space frontend:
