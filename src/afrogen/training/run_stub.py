@@ -58,6 +58,10 @@ def save_training_stub(run_plan_path: Path, artifact_path: Path, run_plan: Train
             training_run_plan_path=str(run_plan_path),
             checkpoint_path="",
             latent_editor_path="",
+            prompt_encoder_path="",
+            scheduler_name="",
+            supports_prompt_generation=False,
+            supports_latent_editing=False,
             device="cpu",
         ),
     )

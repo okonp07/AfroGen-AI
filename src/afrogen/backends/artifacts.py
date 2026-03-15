@@ -18,6 +18,10 @@ class BackendArtifact:
     training_run_plan_path: str = ""
     checkpoint_path: str = ""
     latent_editor_path: str = ""
+    prompt_encoder_path: str = ""
+    scheduler_name: str = ""
+    supports_prompt_generation: bool = False
+    supports_latent_editing: bool = False
     device: str = "cpu"
 
     def to_dict(self) -> dict:
@@ -51,5 +55,19 @@ def validate_backend_artifact(artifact: BackendArtifact | None, project_root: Pa
     checkpoint_path = resolve_artifact_reference(checkpoint, project_root)
     if not checkpoint_path.exists():
         return "checkpoint_missing", f"Artifact metadata points to a checkpoint that is not available: {checkpoint}"
+
+    if not artifact.supports_prompt_generation:
+        return "incomplete_inference_contract", "Checkpoint exists, but the artifact does not declare prompt-generation support yet."
+
+    if not artifact.scheduler_name.strip():
+        return "incomplete_inference_contract", "Checkpoint exists, but no scheduler name has been declared."
+
+    if artifact.supports_latent_editing and artifact.latent_editor_path.strip():
+        latent_editor_path = resolve_artifact_reference(artifact.latent_editor_path, project_root)
+        if not latent_editor_path.exists():
+            return "latent_editor_missing", (
+                "Artifact declares latent editing support, but the referenced latent editor asset is not available: "
+                f"{artifact.latent_editor_path}"
+            )
 
     return "ready_for_inference", "Artifact metadata and checkpoint path are available for inference integration."

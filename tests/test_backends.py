@@ -44,6 +44,8 @@ class BackendTests(unittest.TestCase):
                     status="ready",
                     message="Ready to load checkpoint metadata.",
                     checkpoint_path=str(checkpoint_path),
+                    scheduler_name="EulerDiscreteScheduler",
+                    supports_prompt_generation=True,
                 ),
             )
             backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4), artifact_path=artifact_path)
@@ -63,10 +65,56 @@ class BackendTests(unittest.TestCase):
                     status="ready",
                     message="Metadata uploaded but checkpoint not present.",
                     checkpoint_path="missing/model.ckpt",
+                    scheduler_name="EulerDiscreteScheduler",
+                    supports_prompt_generation=True,
                 ),
             )
             backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4), artifact_path=artifact_path)
             self.assertEqual(backend.info.rollout_state, "checkpoint_missing")
+
+    def test_trained_backend_reports_incomplete_inference_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            artifact_path = Path(temp_dir) / "trained_backend_stub.json"
+            checkpoint_path = Path(temp_dir) / "phase5.ckpt"
+            checkpoint_path.write_text("weights", encoding="utf-8")
+            save_backend_artifact(
+                artifact_path,
+                BackendArtifact(
+                    backend_name="hybrid",
+                    model_strategy="latent-diffusion-plus-editor",
+                    baseline_model_family="sdxl-lora-plus-latent-editor",
+                    status="ready",
+                    message="Checkpoint uploaded but metadata is incomplete.",
+                    checkpoint_path=str(checkpoint_path),
+                    scheduler_name="",
+                    supports_prompt_generation=False,
+                ),
+            )
+            backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4), artifact_path=artifact_path)
+            self.assertEqual(backend.info.rollout_state, "incomplete_inference_contract")
+
+    def test_trained_backend_reports_missing_latent_editor_asset(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            artifact_path = Path(temp_dir) / "trained_backend_stub.json"
+            checkpoint_path = Path(temp_dir) / "phase5.ckpt"
+            checkpoint_path.write_text("weights", encoding="utf-8")
+            save_backend_artifact(
+                artifact_path,
+                BackendArtifact(
+                    backend_name="hybrid",
+                    model_strategy="latent-diffusion-plus-editor",
+                    baseline_model_family="sdxl-lora-plus-latent-editor",
+                    status="ready",
+                    message="Checkpoint uploaded and latent editing declared.",
+                    checkpoint_path=str(checkpoint_path),
+                    latent_editor_path="missing/editor.pt",
+                    scheduler_name="EulerDiscreteScheduler",
+                    supports_prompt_generation=True,
+                    supports_latent_editing=True,
+                ),
+            )
+            backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4), artifact_path=artifact_path)
+            self.assertEqual(backend.info.rollout_state, "latent_editor_missing")
 
 
 if __name__ == "__main__":

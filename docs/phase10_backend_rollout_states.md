@@ -26,6 +26,14 @@ The artifact declares a checkpoint path, but the referenced checkpoint is not av
 
 Artifact metadata exists and the referenced checkpoint path resolves successfully.
 
+### `incomplete_inference_contract`
+
+Checkpoint exists, but required hybrid inference metadata is still incomplete.
+
+### `latent_editor_missing`
+
+Latent editing is declared, but the latent editor asset cannot be resolved.
+
 ## Why This Helps
 
 This gives the Space clearer behavior during rollout:
