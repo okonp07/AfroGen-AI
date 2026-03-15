@@ -102,6 +102,12 @@ python3 scripts/space_readiness.py
 python3 scripts/export_model_repo_bundle.py
 ```
 
+11. Print the final Hugging Face publish handoff:
+
+```bash
+python3 scripts/publish_handoff.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
