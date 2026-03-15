@@ -1,7 +1,7 @@
 ---
 title: AfroGen-AI
 emoji: 🎨
-colorFrom: orange
+colorFrom: yellow
 colorTo: yellow
 sdk: gradio
 app_file: app.py
