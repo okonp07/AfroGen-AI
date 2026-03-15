@@ -14,6 +14,7 @@ The current MVP includes:
 - a Streamlit app scaffold designed to accept a real model backend later
 - a dataset manifest pipeline for training-ready metadata
 - backend abstractions so a trained model can replace the synthetic backend cleanly
+- a defined phase 3 research dataset slice and model strategy
 
 ## Project Structure
 
@@ -51,6 +52,13 @@ streamlit run app/streamlit_app.py
 python3 scripts/prepare_dataset.py
 ```
 
+5. Inspect the chosen phase 3 strategy:
+
+```bash
+python3 scripts/phase3_strategy.py
+python3 scripts/training_readiness.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
@@ -59,6 +67,16 @@ Phase 2 adds the bridge toward a real model project:
 - `src/afrogen/data/` defines the dataset schema and prompt generation utilities
 - `src/afrogen/backends/` defines the inference backend contract
 - the Streamlit app now talks to a backend factory instead of hardcoding the synthetic pipeline
+
+## Phase 3 Direction
+
+The first real research baseline is now explicitly defined in the repo:
+
+- dataset slice: `phase3_research_v1`
+- priority sources: FairFace, FFHQ, BUPT-Balancedface
+- target backend: `hybrid`
+- model strategy: `latent-diffusion-plus-editor`
+- baseline family: `sdxl-lora-plus-latent-editor`
 
 ## Why This Version Matters
 

@@ -15,6 +15,12 @@
   "training": {
     "artifacts_dir": "models",
     "default_manifest_path": "data/processed/manifest.jsonl",
-    "future_backends": ["synthetic", "diffusion", "hybrid"]
+    "future_backends": ["synthetic", "diffusion", "hybrid"],
+    "target_backend": "hybrid",
+    "model_strategy": "latent-diffusion-plus-editor",
+    "dataset_slice_name": "phase3_research_v1",
+    "baseline_model_family": "sdxl-lora-plus-latent-editor",
+    "minimum_train_records": 5000,
+    "minimum_validation_records": 500
   }
 }
