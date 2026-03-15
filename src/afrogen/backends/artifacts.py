@@ -23,6 +23,15 @@ class BackendArtifact:
     supports_prompt_generation: bool = False
     supports_latent_editing: bool = False
     device: str = "cpu"
+    hosted_model_id: str = ""
+    inference_provider: str = "huggingface_hub"
+    prompt_prefix: str = "afrocentric portrait, studio lighting, high detail"
+    negative_prompt: str = ""
+    guidance_scale: float = 4.0
+    num_inference_steps: int = 4
+    inference_timeout_seconds: float = 45.0
+    output_width: int = 512
+    output_height: int = 512
 
     def to_dict(self) -> dict:
         return asdict(self)

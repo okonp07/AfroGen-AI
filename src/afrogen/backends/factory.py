@@ -4,7 +4,13 @@ from .synthetic import SyntheticAfroGenBackend
 from .trained import TrainedAfroGenBackend
 
 
-def create_backend(name: str, image_size: int, latent_shape: tuple[int, int], artifact_path: str | None = None):
+def create_backend(
+    name: str,
+    image_size: int,
+    latent_shape: tuple[int, int],
+    artifact_path: str | None = None,
+    inference_client: object | None = None,
+):
     normalized = name.strip().lower()
     if normalized == "synthetic":
         return SyntheticAfroGenBackend(image_size=image_size, latent_shape=latent_shape)
@@ -14,5 +20,6 @@ def create_backend(name: str, image_size: int, latent_shape: tuple[int, int], ar
             image_size=image_size,
             latent_shape=latent_shape,
             artifact_path=artifact_path,
+            inference_client=inference_client,
         )
     raise ValueError(f"Unsupported backend '{name}'")

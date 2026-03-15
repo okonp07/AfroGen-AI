@@ -169,7 +169,7 @@ This repo now acts as a real foundation for the full product:
 - testable latent editing logic
 - Streamlit UX for prompt-based image generation
 
-The next major milestone is implementing the trained backend so the current app can switch from the synthetic renderer to a real afrocentric face model without changing the UI contract.
+The next major milestone is publishing a metadata-complete hybrid artifact and validating the live Space switch to the hosted hybrid backend.
 
 ## Hugging Face Spaces
 
@@ -184,3 +184,5 @@ Supported artifact formats:
 
 - local path like `models/trained_backend_stub.json`
 - Hub path like `hf://username/repo-name/path/to/trained_backend_stub.json`
+
+Hosted hybrid inference is now implemented in the repo for the `hybrid` backend. When a ready artifact includes `hosted_model_id`, AfroGen calls the hosted Hugging Face model and then applies local latent-driven image adjustments so the editor still influences the final portrait. If hosted inference fails, the backend falls back to the synthetic renderer.

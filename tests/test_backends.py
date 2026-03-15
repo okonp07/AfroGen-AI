@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+from PIL import Image
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,17 @@ if str(SRC_ROOT) not in sys.path:
 
 from afrogen.backends import create_backend
 from afrogen.backends.artifacts import BackendArtifact, save_backend_artifact
+
+
+class DummyInferenceClient:
+    def __init__(self, image: Image.Image | None = None, error: Exception | None = None) -> None:
+        self.image = image or Image.new("RGB", (256, 256), (120, 80, 60))
+        self.error = error
+
+    def text_to_image(self, **_: object) -> Image.Image:
+        if self.error is not None:
+            raise self.error
+        return self.image
 
 
 class BackendTests(unittest.TestCase):
@@ -46,12 +58,74 @@ class BackendTests(unittest.TestCase):
                     checkpoint_path=str(checkpoint_path),
                     scheduler_name="EulerDiscreteScheduler",
                     supports_prompt_generation=True,
+                    hosted_model_id="black-forest-labs/FLUX.1-schnell",
                 ),
             )
             backend = create_backend("hybrid", image_size=256, latent_shape=(4, 4), artifact_path=artifact_path)
             self.assertEqual(backend.info.load_state, "ready")
             self.assertEqual(backend.info.rollout_state, "ready_for_inference")
             self.assertEqual(backend.summary()["checkpoint_path"], str(checkpoint_path))
+            self.assertEqual(backend.summary()["hosted_model_id"], "black-forest-labs/FLUX.1-schnell")
+
+    def test_trained_backend_uses_hosted_inference_when_model_id_is_present(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            artifact_path = Path(temp_dir) / "trained_backend_stub.json"
+            checkpoint_path = Path(temp_dir) / "phase5.ckpt"
+            checkpoint_path.write_text("weights", encoding="utf-8")
+            save_backend_artifact(
+                artifact_path,
+                BackendArtifact(
+                    backend_name="hybrid",
+                    model_strategy="latent-diffusion-plus-editor",
+                    baseline_model_family="sdxl-lora-plus-latent-editor",
+                    status="ready",
+                    message="Hosted inference metadata is ready.",
+                    checkpoint_path=str(checkpoint_path),
+                    scheduler_name="EulerDiscreteScheduler",
+                    supports_prompt_generation=True,
+                    hosted_model_id="black-forest-labs/FLUX.1-schnell",
+                ),
+            )
+            backend = create_backend(
+                "hybrid",
+                image_size=256,
+                latent_shape=(4, 4),
+                artifact_path=artifact_path,
+                inference_client=DummyInferenceClient(),
+            )
+            result = backend.generate("A calm Black woman with braids", seed=5)
+            self.assertEqual(result.backend_name, "hybrid")
+            self.assertIn("Hosted hybrid inference active", result.backend_message)
+
+    def test_trained_backend_falls_back_to_synthetic_if_hosted_inference_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            artifact_path = Path(temp_dir) / "trained_backend_stub.json"
+            checkpoint_path = Path(temp_dir) / "phase5.ckpt"
+            checkpoint_path.write_text("weights", encoding="utf-8")
+            save_backend_artifact(
+                artifact_path,
+                BackendArtifact(
+                    backend_name="hybrid",
+                    model_strategy="latent-diffusion-plus-editor",
+                    baseline_model_family="sdxl-lora-plus-latent-editor",
+                    status="ready",
+                    message="Hosted inference metadata is ready.",
+                    checkpoint_path=str(checkpoint_path),
+                    scheduler_name="EulerDiscreteScheduler",
+                    supports_prompt_generation=True,
+                    hosted_model_id="black-forest-labs/FLUX.1-schnell",
+                ),
+            )
+            backend = create_backend(
+                "hybrid",
+                image_size=256,
+                latent_shape=(4, 4),
+                artifact_path=artifact_path,
+                inference_client=DummyInferenceClient(error=RuntimeError("upstream unavailable")),
+            )
+            result = backend.generate("A calm Black woman with braids", seed=5)
+            self.assertEqual(result.backend_name, "synthetic")
+            self.assertIn("synthetic fallback", result.backend_message)
 
     def test_trained_backend_reports_checkpoint_missing(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

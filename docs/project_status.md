@@ -27,6 +27,8 @@ AfroGen-AI has moved from a notebook-only research repo into a structured, deplo
 - trained backend artifact schema defined
 - rollout states implemented
 - hybrid inference readiness contract defined
+- real hosted Hugging Face model-backed hybrid inference path implemented in the repo
+- synthetic fallback remains available when hosted inference is unavailable or artifact metadata is incomplete
 
 ### Cloud Deployment
 
@@ -56,7 +58,7 @@ The live Space should currently be treated as:
 
 - backend: `synthetic`
 
-This is the correct safe state until a real hybrid checkpoint artifact is published and validated.
+This is still the correct safe state until a metadata-complete hybrid artifact with hosted model metadata is published and validated.
 
 ## Important Completed Milestones
 
@@ -76,7 +78,8 @@ This is the correct safe state until a real hybrid checkpoint artifact is publis
 ### Next Engineering Milestone
 
 - publish a metadata-complete hybrid artifact to `okonp007/afrogen-models`
-- then implement real checkpoint-backed inference in `src/afrogen/backends/trained.py`
+- populate hosted model metadata such as `hosted_model_id` in that artifact
+- validate the live Space with `AFROGEN_BACKEND=hybrid`
 
 ### Real Model Work Still Needed
 
@@ -93,8 +96,9 @@ The next best phase is:
 
 - verify Space settings
 - publish a metadata-complete artifact using the checkpoint metadata template
+- include hosted model metadata for the deployed Hugging Face inference endpoint/model
 - keep backend on `synthetic` until the hybrid artifact validates cleanly
-- then begin real checkpoint-backed inference implementation
+- then switch the live Space to `hybrid` and validate fallback behavior
 
 ## Repo Recovery Guidance
 
