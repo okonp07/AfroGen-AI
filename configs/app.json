@@ -1,0 +1,8 @@
+{
+  "app": {
+    "title": "AfroGen-AI MVP",
+    "image_size": 512,
+    "latent_shape": [4, 4],
+    "export_dir": "outputs"
+  }
+}

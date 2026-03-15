@@ -1,98 +1,55 @@
-# AfroGen-AI: A model for Generating High quality black faces
+# AfroGen-AI
 
-# AfroGen AI
+AfroGen-AI is a reproducible MVP for generating synthetic afrocentric portrait concepts from text prompts and interactively editing a latent control matrix in a Streamlit UI.
 
-AfroGen AI is a generative AI model based on Stable Diffusion that focuses on generating high-quality images of Black faces. The project utilizes a transformer-based model with a final layer trained exclusively on images of Black individuals. Additionally, the model incorporates a latent vector that is generated alongside the image, enabling seamless modifications to the image by adjusting the latent vector.
+This version replaces the earlier notebook-only experiments with a proper project structure that we can extend into a trained prompt-to-image system.
 
-## Features
-- **Black Face Generation**: Specializes in generating realistic and diverse images of Black people.
-- **Latent Vector Editing**: Each generated image is accompanied by a latent vector, allowing users to fine-tune the image characteristics post-generation.
-- **Transformer-Based Architecture**: Built upon a modified version of Stable Diffusion with an Afro-centric dataset.
+## Current MVP
 
-## Installation
+The current MVP includes:
 
-### Prerequisites
-Ensure that you have the following dependencies installed:
-- Python 3.8+
-- PyTorch
-- Hugging Face Diffusers
-- Transformers
-- OpenCV
-- NumPy
-- Matplotlib
-- CUDA (for GPU acceleration)
+- prompt parsing for portrait attributes such as age, skin tone, hairstyle, mood, and accessories
+- a deterministic latent control matrix that can be edited in the UI
+- a synthetic portrait renderer that updates as the latent matrix changes
+- a Streamlit app scaffold designed to accept a real model backend later
 
-To install the necessary libraries, run:
+## Project Structure
+
+```text
+AfroGen-AI/
+  app/                  Streamlit entrypoints
+  configs/              App and model configuration
+  data/                 Dataset staging folders
+  docs/                 Architecture and roadmap docs
+  models/               Placeholder for checkpoints
+  outputs/              Generated images and exports
+  scripts/              Helper scripts
+  src/afrogen/          Python package
+  tests/                Basic verification tests
+```
+
+## Quick Start
+
+1. Create a virtual environment.
+2. Install dependencies:
+
 ```bash
-pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu118
-pip install diffusers transformers opencv-python numpy matplotlib
+pip install -r requirements.txt
 ```
 
-## Training the Model
+3. Run the app:
 
-### 1. Data Preparation
-Gather a dataset of Black faces with diverse attributes (gender, age, skin tone, expressions, etc.). Preprocess the images using OpenCV and store them in a structured format.
-
-### 2. Fine-Tuning Stable Diffusion
-Use the `diffusers` library to fine-tune a pre-trained Stable Diffusion model with the curated dataset:
-```python
-from diffusers import StableDiffusionPipeline
-from transformers import CLIPTextModel
-
-# Load pre-trained model
-model_id = "CompVis/stable-diffusion-v1-4"
-pipeline = StableDiffusionPipeline.from_pretrained(model_id)
-
-# Fine-tuning with Black face dataset (pseudo code)
-pipeline.train_on_custom_dataset("path/to/black_faces_dataset")
+```bash
+streamlit run app/streamlit_app.py
 ```
 
-### 3. Latent Vector Modification
-Modify the latent space representation to ensure that generated images are tied to editable vectors:
-```python
-import torch
+## Why This Version Matters
 
-def generate_with_latent(model, prompt):
-    latent_vector = torch.randn(1, 512)  # Example latent vector
-    image = model(prompt, latent_vector)
-    return image, latent_vector
-```
+This repo now acts as a real foundation for the full product:
 
-## Usage
+- reproducible package layout
+- deterministic generation pipeline
+- testable latent editing logic
+- Streamlit UX for prompt-based image generation
 
-### Generating Images
-Run the following to generate an image with AfroGen AI:
-```python
-image, latent_vector = generate_with_latent(pipeline, "A portrait of a Black woman with curly hair")
-image.show()
-```
-
-### Modifying the Latent Vector
-Adjust the latent vector to tweak facial attributes:
-```python
-new_latent = latent_vector + 0.1 * torch.randn_like(latent_vector)  # Slight variation
-new_image = pipeline("A Black male with short hair", new_latent)
-new_image.show()
-```
-
-## Roadmap
-- **Phase 1**: Model fine-tuning on diverse Black face dataset 
-- **Phase 2**: Implementing and refining latent vector modifications 
-- **Phase 3**: Deploying AfroGen AI as an open-source model 
-
-## License
-This project is released under the MIT License.
-
-## Contributors
-- Okon Prince (Project Lead)
-- Joseph Edet 
-- Elizabeth Ajabor
-- Ofigwe Hart
-- Onyiobazi oquah 
-- Edodi Christopher
-- Michael Eti
-- Austine Agbor 
-
-## Acknowledgments
-Special thanks to the open-source AI community for providing resources and frameworks that made this project possible.
-
+The next major milestone is replacing the synthetic renderer with a trained afrocentric face model.

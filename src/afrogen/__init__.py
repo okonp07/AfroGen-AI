@@ -1,0 +1,5 @@
+"""AfroGen-AI package."""
+
+from .config import load_app_config
+
+__all__ = ["load_app_config"]
