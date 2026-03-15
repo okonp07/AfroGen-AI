@@ -120,6 +120,18 @@ python3 scripts/inspect_backend_artifact.py
 python3 scripts/export_checkpoint_metadata.py
 ```
 
+14. Inspect the live Hugging Face Space:
+
+```bash
+HF_TOKEN=... python3 scripts/check_live_space.py
+```
+
+15. Publish the current model bundle to Hugging Face:
+
+```bash
+HF_TOKEN=... python3 scripts/publish_hf_bundle.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
