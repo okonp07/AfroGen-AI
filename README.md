@@ -114,6 +114,12 @@ python3 scripts/publish_handoff.py
 python3 scripts/inspect_backend_artifact.py
 ```
 
+13. Export a metadata-complete checkpoint bundle:
+
+```bash
+python3 scripts/export_checkpoint_metadata.py
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:
