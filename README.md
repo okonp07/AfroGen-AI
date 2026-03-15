@@ -1,3 +1,5 @@
+- **APP LINK**: [https://huggingface.co/spaces/okonp007/AfroGen-AI](https://huggingface.co/spaces/okonp007/AfroGen-AI)
+
 ---
 title: AfroGen-AI
 emoji: 🎨
@@ -9,9 +11,6 @@ pinned: false
 ---
 
 # AfroGen-AI
-
-
-- APP LINK: [https://huggingface.co/spaces/okonp007/AfroGen-AI](https://huggingface.co/spaces/okonp007/AfroGen-AI)
 
 AfroGen-AI is a cloud-deployed prompt-to-portrait app for afrocentric image generation with editable latent controls.
 
