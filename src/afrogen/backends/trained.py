@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import numpy as np
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -11,6 +10,7 @@ from afrogen.generation.prompting import parse_prompt
 
 from .artifacts import BackendArtifact, load_backend_artifact
 from .base import BackendInfo
+from .resolve import resolve_artifact_reference
 
 
 class TrainedAfroGenBackend:
@@ -19,12 +19,14 @@ class TrainedAfroGenBackend:
         name: str,
         image_size: int,
         latent_shape: tuple[int, int],
-        artifact_path: Path | None = None,
+        artifact_path: str | None = None,
     ) -> None:
         self.name = name
         self.image_size = image_size
         self.latent_shape = latent_shape
-        self.artifact_path = artifact_path or (Path(__file__).resolve().parents[3] / "models" / "trained_backend_stub.json")
+        self.project_root = Path(__file__).resolve().parents[3]
+        self.artifact_reference = artifact_path or "models/trained_backend_stub.json"
+        self.artifact_path = resolve_artifact_reference(self.artifact_reference, self.project_root)
         self.artifact_metadata = self._load_artifact_metadata()
         self.info = BackendInfo(
             name=name,
@@ -49,7 +51,7 @@ class TrainedAfroGenBackend:
         )
 
     def _load_artifact_metadata(self) -> BackendArtifact | None:
-        return load_backend_artifact(self.artifact_path)
+        return load_backend_artifact(self.artifact_reference, self.project_root)
 
     def _load_state(self) -> str:
         if not self.artifact_metadata:

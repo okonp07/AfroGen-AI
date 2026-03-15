@@ -5,7 +5,8 @@
     "latent_shape": [4, 4],
     "export_dir": "outputs",
     "backend": "synthetic",
-    "trained_backend_artifact": "models/trained_backend_stub.json"
+    "trained_backend_artifact": "models/trained_backend_stub.json",
+    "default_prompt": "A smiling young Black woman with braids, golden earrings, and a calm studio portrait"
   },
   "dataset": {
     "raw_dir": "data/raw",
@@ -31,6 +32,7 @@
   "inference": {
     "checkpoint_dir": "models/checkpoints",
     "artifact_metadata_path": "models/trained_backend_stub.json",
-    "default_device": "cpu"
+    "default_device": "cpu",
+    "hub_token_env": "HF_TOKEN"
   }
 }

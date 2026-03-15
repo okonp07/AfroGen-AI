@@ -24,7 +24,7 @@ backend = create_backend(
     name=app_config["backend"],
     image_size=app_config["image_size"],
     latent_shape=latent_shape,
-    artifact_path=PROJECT_ROOT / app_config["trained_backend_artifact"],
+    artifact_path=app_config["trained_backend_artifact"],
 )
 
 

@@ -4,6 +4,8 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from .resolve import resolve_artifact_reference
+
 
 @dataclass(frozen=True)
 class BackendArtifact:
@@ -22,10 +24,11 @@ class BackendArtifact:
         return asdict(self)
 
 
-def load_backend_artifact(artifact_path: Path) -> BackendArtifact | None:
-    if not artifact_path.exists():
+def load_backend_artifact(artifact_path: str | Path, project_root: Path | None = None) -> BackendArtifact | None:
+    resolved = resolve_artifact_reference(artifact_path, project_root or Path.cwd())
+    if not resolved.exists():
         return None
-    data = json.loads(artifact_path.read_text(encoding="utf-8"))
+    data = json.loads(resolved.read_text(encoding="utf-8"))
     return BackendArtifact(**data)
 
 
