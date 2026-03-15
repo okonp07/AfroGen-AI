@@ -133,6 +133,14 @@ HF_TOKEN=... python3 scripts/check_live_space.py
 HF_TOKEN=... python3 scripts/publish_hf_bundle.py
 ```
 
+16. For live hybrid rollout, export and publish a hosted-model artifact:
+
+```bash
+python3 scripts/export_checkpoint_metadata.py \
+  --hosted-model-id black-forest-labs/FLUX.1-schnell
+HF_TOKEN=... python3 scripts/publish_hf_bundle.py --bundle-dir outputs/checkpoint_metadata_bundle
+```
+
 ## Phase 2 Foundation
 
 Phase 2 adds the bridge toward a real model project:

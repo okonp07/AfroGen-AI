@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import os
 from pathlib import Path
 import shutil
@@ -17,14 +18,36 @@ if str(SRC_ROOT) not in sys.path:
 MODEL_REPO_ID = "okonp007/afrogen-models"
 
 
+def _resolve_bundle_dir(project_root: Path, bundle_dir: str | None) -> Path:
+    if bundle_dir:
+        path = Path(bundle_dir)
+        return path if path.is_absolute() else project_root / path
+
+    checkpoint_bundle = project_root / "outputs" / "checkpoint_metadata_bundle"
+    if checkpoint_bundle.exists():
+        return checkpoint_bundle
+    return project_root / "outputs" / "model_repo_bundle"
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Publish an AfroGen bundle to the Hugging Face model repo.")
+    parser.add_argument(
+        "--bundle-dir",
+        default=None,
+        help="Bundle directory to publish. Defaults to outputs/checkpoint_metadata_bundle when present, otherwise outputs/model_repo_bundle.",
+    )
+    args = parser.parse_args()
+
     token = os.getenv("HF_TOKEN")
     if not token:
         raise SystemExit("HF_TOKEN is required to publish the model bundle.")
 
-    bundle_dir = PROJECT_ROOT / "outputs" / "model_repo_bundle"
+    bundle_dir = _resolve_bundle_dir(PROJECT_ROOT, args.bundle_dir)
     if not bundle_dir.exists():
-        raise SystemExit("Model repo bundle not found. Run scripts/export_model_repo_bundle.py first.")
+        raise SystemExit(
+            f"Model repo bundle not found at {bundle_dir}. "
+            "Run scripts/export_checkpoint_metadata.py or scripts/export_model_repo_bundle.py first."
+        )
 
     with tempfile.TemporaryDirectory() as temp_dir:
         clone_dir = Path(temp_dir) / "hf-model-repo"
@@ -64,7 +87,7 @@ def main() -> None:
             check=True,
         )
         subprocess.run(["git", "-C", str(clone_dir), "push", "origin", "main"], check=True)
-        print(f"Published bundle to {MODEL_REPO_ID}")
+        print(f"Published {bundle_dir} to {MODEL_REPO_ID}")
 
 
 if __name__ == "__main__":

@@ -52,3 +52,30 @@ python3 scripts/export_checkpoint_metadata.py \
 2. Export the bundle.
 3. Upload the resulting files to the Hugging Face model repo.
 4. Switch the Space from `synthetic` to `hybrid` only after the backend validates as ready.
+
+## Recommended Live Hybrid Flow
+
+1. Provision a hosted text-to-image model on Hugging Face and note its model id.
+2. Export the hybrid artifact bundle:
+
+```bash
+python3 scripts/export_checkpoint_metadata.py \
+  --hosted-model-id black-forest-labs/FLUX.1-schnell \
+  --prompt-prefix "afrocentric studio portrait, ultra detailed" \
+  --negative-prompt "blurry, distorted hands" \
+  --guidance-scale 3.5 \
+  --num-inference-steps 6
+```
+
+3. Publish that bundle to the model repo:
+
+```bash
+HF_TOKEN=... python3 scripts/publish_hf_bundle.py --bundle-dir outputs/checkpoint_metadata_bundle
+```
+
+4. Set the Space variables:
+
+- `AFROGEN_BACKEND=hybrid`
+- `AFROGEN_ARTIFACT_PATH=hf://okonp007/afrogen-models/trained_backend_stub.json`
+
+5. Test the live app. Once those steps are done, the Space is ready for real hosted-image generation testing.

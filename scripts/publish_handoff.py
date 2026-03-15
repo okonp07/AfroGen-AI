@@ -41,6 +41,19 @@ def main() -> None:
             print(f"  - {file_name}")
     else:
         print("  - Bundle not found yet. Run: python3 scripts/export_model_repo_bundle.py")
+    checkpoint_bundle_dir = PROJECT_ROOT / "outputs" / "checkpoint_metadata_bundle"
+    checkpoint_files = sorted(path.name for path in checkpoint_bundle_dir.glob("*") if path.is_file())
+    print()
+    print("Hybrid rollout bundle")
+    print(f"  Directory: {checkpoint_bundle_dir}")
+    if checkpoint_files:
+        for file_name in checkpoint_files:
+            print(f"  - {file_name}")
+    else:
+        print(
+            "  - Bundle not found yet. Run: python3 scripts/export_checkpoint_metadata.py "
+            "--hosted-model-id <your-model-id>"
+        )
     print()
     print("Optional secret")
     print("  HF_TOKEN=<private-model-repo-token>")
