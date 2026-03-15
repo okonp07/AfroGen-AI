@@ -4,7 +4,8 @@
     "image_size": 512,
     "latent_shape": [4, 4],
     "export_dir": "outputs",
-    "backend": "synthetic"
+    "backend": "synthetic",
+    "trained_backend_artifact": "models/trained_backend_stub.json"
   },
   "dataset": {
     "raw_dir": "data/raw",
@@ -26,5 +27,10 @@
     "minimum_validation_records": 500,
     "run_plan_path": "models/training_run_plan.json",
     "artifact_stub_path": "models/trained_backend_stub.json"
+  },
+  "inference": {
+    "checkpoint_dir": "models/checkpoints",
+    "artifact_metadata_path": "models/trained_backend_stub.json",
+    "default_device": "cpu"
   }
 }

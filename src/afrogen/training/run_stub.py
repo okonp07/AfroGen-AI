@@ -4,6 +4,7 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from afrogen.backends import BackendArtifact, save_backend_artifact
 from afrogen.data import load_manifest
 from afrogen.training.plan import build_training_plan
 from afrogen.training.strategy import PHASE3_MODEL_STRATEGY
@@ -45,16 +46,18 @@ def save_training_stub(run_plan_path: Path, artifact_path: Path, run_plan: Train
     artifact_path.parent.mkdir(parents=True, exist_ok=True)
 
     run_plan_path.write_text(json.dumps(asdict(run_plan), indent=2), encoding="utf-8")
-    artifact_path.write_text(
-        json.dumps(
-            {
-                "backend_name": PHASE3_MODEL_STRATEGY.target_backend,
-                "model_strategy": PHASE3_MODEL_STRATEGY.name,
-                "baseline_model_family": PHASE3_MODEL_STRATEGY.baseline_model_family,
-                "status": "stub",
-                "message": "Replace this file with real checkpoint metadata once model training is implemented.",
-            },
-            indent=2,
+    save_backend_artifact(
+        artifact_path,
+        BackendArtifact(
+            backend_name=PHASE3_MODEL_STRATEGY.target_backend,
+            model_strategy=PHASE3_MODEL_STRATEGY.name,
+            baseline_model_family=PHASE3_MODEL_STRATEGY.baseline_model_family,
+            status="stub",
+            message="Replace this file with real checkpoint metadata once model training is implemented.",
+            manifest_path=run_plan.manifest_path,
+            training_run_plan_path=str(run_plan_path),
+            checkpoint_path="",
+            latent_editor_path="",
+            device="cpu",
         ),
-        encoding="utf-8",
     )

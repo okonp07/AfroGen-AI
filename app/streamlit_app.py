@@ -24,6 +24,7 @@ backend = create_backend(
     name=app_config["backend"],
     image_size=app_config["image_size"],
     latent_shape=latent_shape,
+    artifact_path=PROJECT_ROOT / app_config["trained_backend_artifact"],
 )
 
 
@@ -31,6 +32,7 @@ st.set_page_config(page_title=app_config["title"], layout="wide")
 st.title(app_config["title"])
 st.caption("Prompt-to-portrait MVP with editable latent controls.")
 st.caption(f"Active backend: `{backend.info.name}`")
+st.caption(f"Backend load state: `{backend.info.load_state}`")
 
 with st.sidebar:
     st.subheader("Generation")

@@ -15,6 +15,7 @@ class SyntheticAfroGenBackend:
             description="Deterministic illustration backend used for product scaffolding.",
             editable_latent=True,
             ready_for_training=False,
+            load_state="ready",
         )
 
     def generate(self, prompt: str, seed: int = 7, delta: np.ndarray | None = None) -> GenerationResult:

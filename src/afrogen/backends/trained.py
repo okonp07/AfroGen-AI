@@ -9,20 +9,29 @@ from afrogen.generation.latent import apply_delta, build_latent_matrix
 from afrogen.generation.pipeline import GenerationResult
 from afrogen.generation.prompting import parse_prompt
 
+from .artifacts import BackendArtifact, load_backend_artifact
 from .base import BackendInfo
 
 
 class TrainedAfroGenBackend:
-    def __init__(self, name: str, image_size: int, latent_shape: tuple[int, int]) -> None:
+    def __init__(
+        self,
+        name: str,
+        image_size: int,
+        latent_shape: tuple[int, int],
+        artifact_path: Path | None = None,
+    ) -> None:
         self.name = name
         self.image_size = image_size
         self.latent_shape = latent_shape
+        self.artifact_path = artifact_path or (Path(__file__).resolve().parents[3] / "models" / "trained_backend_stub.json")
         self.artifact_metadata = self._load_artifact_metadata()
         self.info = BackendInfo(
             name=name,
             description="Placeholder backend for the future trained afrocentric face model.",
             editable_latent=True,
             ready_for_training=True,
+            load_state=self._load_state(),
         )
 
     def generate(self, prompt: str, seed: int = 7, delta: np.ndarray | None = None) -> GenerationResult:
@@ -39,16 +48,28 @@ class TrainedAfroGenBackend:
             backend_message=self._backend_message(),
         )
 
-    def _load_artifact_metadata(self) -> dict:
-        artifact_path = Path(__file__).resolve().parents[3] / "models" / "trained_backend_stub.json"
-        if artifact_path.exists():
-            return json.loads(artifact_path.read_text(encoding="utf-8"))
-        return {}
+    def _load_artifact_metadata(self) -> BackendArtifact | None:
+        return load_backend_artifact(self.artifact_path)
+
+    def _load_state(self) -> str:
+        if not self.artifact_metadata:
+            return "missing"
+        return self.artifact_metadata.status
 
     def _backend_message(self) -> str:
         if not self.artifact_metadata:
             return "Trained backend placeholder. Run scripts/build_training_stub.py to create the first backend artifact stub."
-        return self.artifact_metadata.get("message", "Trained backend stub active.")
+        prefix = f"Artifact status: {self.artifact_metadata.status}."
+        return f"{prefix} {self.artifact_metadata.message}"
+
+    def summary(self) -> dict:
+        return {
+            "backend_name": self.name,
+            "load_state": self.info.load_state,
+            "artifact_path": str(self.artifact_path),
+            "checkpoint_path": self.artifact_metadata.checkpoint_path if self.artifact_metadata else "",
+            "latent_editor_path": self.artifact_metadata.latent_editor_path if self.artifact_metadata else "",
+        }
 
     def _render_placeholder(self, prompt: str) -> Image.Image:
         image = Image.new("RGB", (self.image_size, self.image_size), (247, 236, 221))
@@ -56,12 +77,14 @@ class TrainedAfroGenBackend:
         draw.rounded_rectangle([32, 32, self.image_size - 32, self.image_size - 32], radius=24, outline=(129, 93, 65), width=4)
         text = [
             f"Backend: {self.name}",
-            "Status: placeholder",
+            f"Status: {self.info.load_state}",
             "Next step:",
             "Load a trained model",
             "and keep the same",
             "generate(prompt, seed, delta)",
             "interface.",
+            "",
+            f"Checkpoint: {(self.artifact_metadata.checkpoint_path if self.artifact_metadata else 'not set')[:32]}",
             "",
             f"Prompt: {prompt[:48]}",
         ]
