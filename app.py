@@ -270,32 +270,45 @@ CUSTOM_CSS = """
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0 18px;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 22px;
   border-radius: 999px;
-  text-decoration: none;
+  text-decoration: none !important;
   font-weight: 700;
-  font-size: 0.95rem;
-  color: white;
-  background: linear-gradient(135deg, var(--afg-black), var(--afg-purple));
-  border: 1px solid rgba(47, 21, 63, 0.12);
-  box-shadow: 0 12px 30px rgba(47, 21, 63, 0.16);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+  font-size: 0.92rem;
+  color: var(--afg-deep-purple) !important;
+  background: rgba(94, 59, 140, 0.09);
+  border: 1px solid rgba(94, 59, 140, 0.18);
+  box-shadow: 0 8px 22px rgba(47, 21, 63, 0.08);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+  cursor: pointer;
 }
 
-.action-link:nth-child(2) {
-  background: linear-gradient(135deg, var(--afg-purple), #8d63bf);
+.action-link::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex: 0 0 18px;
+  background: linear-gradient(135deg, #7b56ad, #2f153f);
+  box-shadow: 0 0 0 6px rgba(94, 59, 140, 0.12);
 }
 
-.action-link:nth-child(3) {
-  background: linear-gradient(135deg, #7a5da8, #3b224f);
+.action-link:link,
+.action-link:visited,
+.action-link:hover,
+.action-link:active,
+.action-link:focus {
+  color: var(--afg-deep-purple) !important;
+  text-decoration: none !important;
 }
 
 .action-link:hover,
 .action-link:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 16px 36px rgba(47, 21, 63, 0.22);
-  opacity: 0.96;
+  background: rgba(94, 59, 140, 0.13);
+  box-shadow: 0 12px 28px rgba(47, 21, 63, 0.14);
 }
 
 .action-link:focus-visible {
@@ -361,6 +374,30 @@ body.dark .deployment-note-box,
 body.dark .deployment-note-title,
 [data-theme="dark"] .deployment-note-title {
   color: rgba(242, 238, 248, 0.72);
+}
+
+body.dark .action-link,
+[data-theme="dark"] .action-link,
+body.dark .action-link:link,
+body.dark .action-link:visited,
+body.dark .action-link:hover,
+body.dark .action-link:active,
+body.dark .action-link:focus,
+[data-theme="dark"] .action-link:link,
+[data-theme="dark"] .action-link:visited,
+[data-theme="dark"] .action-link:hover,
+[data-theme="dark"] .action-link:active,
+[data-theme="dark"] .action-link:focus {
+  color: #efe8fb !important;
+  background: rgba(214, 200, 241, 0.1);
+  border-color: rgba(214, 200, 241, 0.18);
+}
+
+body.dark .action-link:hover,
+body.dark .action-link:focus-visible,
+[data-theme="dark"] .action-link:hover,
+[data-theme="dark"] .action-link:focus-visible {
+  background: rgba(214, 200, 241, 0.16);
 }
 
 @media (max-width: 900px) {
