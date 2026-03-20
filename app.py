@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
+import json
 from pathlib import Path
 import sys
 
@@ -20,6 +22,9 @@ config = load_app_config()
 app_config = config["app"]
 latent_shape = tuple(app_config["latent_shape"])
 AUTHOR_IMAGE_URL = "https://raw.githubusercontent.com/okonp07/AfroGen-AI/main/assets/pic1.png"
+GITHUB_REPO_URL = "https://github.com/okonp07/AfroGen-AI"
+DEVELOPER_BRIEF_URL = f"{GITHUB_REPO_URL}/blob/main/docs/app_improvement_brief.md"
+FEEDBACK_STORAGE_PATH = PROJECT_ROOT / "outputs" / "feedback" / "feedback_submissions.jsonl"
 backend = create_backend(
     name=app_config["backend"],
     image_size=app_config["image_size"],
@@ -156,13 +161,15 @@ CUSTOM_CSS = """
 
 #about-toggle,
 #generate-btn,
-#close-about {
+#close-about,
+#feedback-submit-btn {
   border-radius: 999px !important;
 }
 
 #about-toggle button,
 #generate-btn button,
-#close-about button {
+#close-about button,
+#feedback-submit-btn button {
   font-weight: 700;
   border: none !important;
 }
@@ -173,6 +180,11 @@ CUSTOM_CSS = """
 }
 
 #generate-btn button {
+  background: linear-gradient(135deg, var(--afg-purple), #8d63bf) !important;
+  color: white !important;
+}
+
+#feedback-submit-btn button {
   background: linear-gradient(135deg, var(--afg-purple), #8d63bf) !important;
   color: white !important;
 }
@@ -211,58 +223,84 @@ CUSTOM_CSS = """
   border-radius: 24px;
 }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  margin-right: 10px;
-  margin-bottom: 8px;
-  border-radius: 999px;
-  background: rgba(94, 59, 140, 0.09);
-  border: 1px solid rgba(94, 59, 140, 0.18);
-  color: var(--afg-deep-purple);
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: default;
-  user-select: text;
-}
-
-.status-pill-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: 12px;
-}
-
-.status-group-label {
-  color: rgba(18, 16, 21, 0.7);
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.status-key {
-  color: rgba(47, 21, 63, 0.76);
-}
-
-.status-value {
-  font-weight: 800;
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #7b56ad, #2f153f);
-  box-shadow: 0 0 0 4px rgba(94, 59, 140, 0.12);
-}
-
 .hero-subcopy {
   color: rgba(18, 16, 21, 0.78);
   font-size: 1rem;
   line-height: 1.65;
+}
+
+.hero-subcopy p {
+  margin: 0 0 14px 0;
+}
+
+.deployment-note-box {
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(94, 59, 140, 0.08);
+  border: 1px solid rgba(94, 59, 140, 0.12);
+}
+
+.deployment-note-title {
+  color: rgba(18, 16, 21, 0.74);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.deployment-note-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.deployment-note-list li {
+  margin: 6px 0;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: white;
+  background: linear-gradient(135deg, var(--afg-black), var(--afg-purple));
+  border: 1px solid rgba(47, 21, 63, 0.12);
+  box-shadow: 0 12px 30px rgba(47, 21, 63, 0.16);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+}
+
+.action-link:nth-child(2) {
+  background: linear-gradient(135deg, var(--afg-purple), #8d63bf);
+}
+
+.action-link:nth-child(3) {
+  background: linear-gradient(135deg, #7a5da8, #3b224f);
+}
+
+.action-link:hover,
+.action-link:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 36px rgba(47, 21, 63, 0.22);
+  opacity: 0.96;
+}
+
+.action-link:focus-visible {
+  outline: 3px solid rgba(214, 200, 241, 0.75);
+  outline-offset: 2px;
 }
 
 .footer-wrap {
@@ -314,21 +352,15 @@ body.dark .footer-note,
   color: rgba(242, 238, 248, 0.82);
 }
 
-body.dark .status-pill,
-[data-theme="dark"] .status-pill {
-  background: rgba(214, 200, 241, 0.1);
-  color: #efe8fb;
-  border-color: rgba(214, 200, 241, 0.18);
+body.dark .deployment-note-box,
+[data-theme="dark"] .deployment-note-box {
+  background: rgba(214, 200, 241, 0.08);
+  border-color: rgba(214, 200, 241, 0.12);
 }
 
-body.dark .status-group-label,
-[data-theme="dark"] .status-group-label {
+body.dark .deployment-note-title,
+[data-theme="dark"] .deployment-note-title {
   color: rgba(242, 238, 248, 0.72);
-}
-
-body.dark .status-key,
-[data-theme="dark"] .status-key {
-  color: rgba(242, 238, 248, 0.78);
 }
 
 @media (max-width: 900px) {
@@ -346,6 +378,14 @@ body.dark .status-key,
   #author-image img {
     width: min(240px, 100%);
     margin-top: 6px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .action-link {
+    width: 100%;
   }
 }
 """
@@ -379,6 +419,60 @@ def close_about_panel():
     return gr.update(visible=False), False
 
 
+def submit_feedback(
+    name: str,
+    email: str,
+    role: str,
+    rating: float,
+    feedback_text: str,
+):
+    cleaned_name = name.strip()
+    cleaned_email = email.strip()
+    cleaned_feedback = feedback_text.strip()
+    if not cleaned_feedback:
+        return (
+            gr.update(
+                value="Please enter your feedback before submitting the form.",
+                visible=True,
+            ),
+            name,
+            email,
+            role,
+            rating,
+            feedback_text,
+        )
+
+    feedback_entry = {
+        "submitted_at": datetime.now(timezone.utc).isoformat(),
+        "name": cleaned_name or "Anonymous",
+        "email": cleaned_email,
+        "role": role,
+        "rating": int(rating),
+        "feedback": cleaned_feedback,
+    }
+
+    save_message = "Feedback saved successfully for review."
+    try:
+        FEEDBACK_STORAGE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with FEEDBACK_STORAGE_PATH.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(feedback_entry, ensure_ascii=True) + "\n")
+    except OSError as exc:
+        save_message = f"Feedback captured, but local storage failed: {exc}"
+
+    thank_you = (
+        f"Thank you{f' {cleaned_name}' if cleaned_name else ''}. "
+        f"Your feedback has been recorded. {save_message}"
+    )
+    return (
+        gr.update(value=thank_you, visible=True),
+        "",
+        "",
+        "App user",
+        4,
+        "",
+    )
+
+
 with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS) as demo:
     about_open = gr.State(False)
 
@@ -388,33 +482,32 @@ with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS
                 with gr.Column(scale=4):
                     gr.Markdown(f"# {app_config['title']}")
                     gr.HTML(
-                        """
-                        <div class="hero-subcopy">
-                          A cloud-ready portrait studio for afrocentric prompt generation, open-source research,
-                          and future hybrid latent editing. The current live deployment proves the full UX while
-                          the model-backed generation path continues to evolve.
-                        </div>
-                        """
-                    )
-                    gr.HTML(
                         f"""
-                        <div class="status-group-label">Deployment Snapshot</div>
-                        <div class="status-pill-row" aria-label="Current deployment status">
-                          <span class="status-pill">
-                            <span class="status-dot"></span>
-                            <span class="status-key">Backend</span>
-                            <span class="status-value">{backend.info.name}</span>
-                          </span>
-                          <span class="status-pill">
-                            <span class="status-dot"></span>
-                            <span class="status-key">Load State</span>
-                            <span class="status-value">{backend.info.load_state}</span>
-                          </span>
-                          <span class="status-pill">
-                            <span class="status-dot"></span>
-                            <span class="status-key">Rollout</span>
-                            <span class="status-value">{backend.info.rollout_state}</span>
-                          </span>
+                        <div class="hero-subcopy">
+                          <p>
+                            A cloud-ready portrait studio for afrocentric prompt generation, open-source research,
+                            and future hybrid latent editing. The current live deployment proves the full UX while
+                            the model-backed generation path continues to evolve.
+                          </p>
+                          <div class="deployment-note-box">
+                            <div class="deployment-note-title">Deployment Notes</div>
+                            <ul class="deployment-note-list">
+                              <li><strong>Backend:</strong> {backend.info.name}</li>
+                              <li><strong>Load state:</strong> {backend.info.load_state}</li>
+                              <li><strong>Rollout readiness:</strong> {backend.info.rollout_state}</li>
+                            </ul>
+                          </div>
+                          <div class="hero-actions" role="navigation" aria-label="Project actions">
+                            <a class="action-link" href="{GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer">
+                              Official GitHub Repo
+                            </a>
+                            <a class="action-link" href="{DEVELOPER_BRIEF_URL}" target="_blank" rel="noopener noreferrer">
+                              Developer Brief
+                            </a>
+                            <a class="action-link" href="#feedback-panel">
+                              User Feedback Form
+                            </a>
+                          </div>
                         </div>
                         """
                     )
@@ -479,6 +572,35 @@ with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS
                 base_matrix = gr.JSON(label="Base Latent Matrix")
                 edited_matrix = gr.JSON(label="Edited Latent Matrix")
 
+        with gr.Column(elem_id="feedback-panel", elem_classes=["panel-card"]):
+            gr.Markdown("## User Feedback Form")
+            gr.Markdown(
+                "Share product feedback, bugs, feature ideas, accessibility issues, or model-quality observations."
+            )
+            with gr.Row():
+                feedback_name = gr.Textbox(label="Name", placeholder="Optional")
+                feedback_email = gr.Textbox(label="Email", placeholder="Optional")
+            with gr.Row():
+                feedback_role = gr.Dropdown(
+                    choices=["App user", "Researcher", "Developer", "Designer", "Other"],
+                    value="App user",
+                    label="You are",
+                )
+                feedback_rating = gr.Slider(
+                    minimum=1,
+                    maximum=5,
+                    step=1,
+                    value=4,
+                    label="Experience rating",
+                )
+            feedback_text = gr.Textbox(
+                label="Your feedback",
+                lines=5,
+                placeholder="Tell us what worked, what did not, and what you would improve.",
+            )
+            feedback_submit = gr.Button("Submit Feedback", elem_id="feedback-submit-btn")
+            feedback_status = gr.Markdown(visible=False)
+
         gr.HTML(FOOTER_HTML, elem_classes=["footer-wrap"])
 
     generate.click(
@@ -488,6 +610,18 @@ with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS
     )
     about_button.click(toggle_about_panel, inputs=about_open, outputs=[about_panel, about_open])
     close_about.click(close_about_panel, outputs=[about_panel, about_open])
+    feedback_submit.click(
+        fn=submit_feedback,
+        inputs=[feedback_name, feedback_email, feedback_role, feedback_rating, feedback_text],
+        outputs=[
+            feedback_status,
+            feedback_name,
+            feedback_email,
+            feedback_role,
+            feedback_rating,
+            feedback_text,
+        ],
+    )
 
 
 if __name__ == "__main__":
