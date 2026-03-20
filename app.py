@@ -19,7 +19,7 @@ from afrogen.backends import create_backend
 config = load_app_config()
 app_config = config["app"]
 latent_shape = tuple(app_config["latent_shape"])
-author_image = PROJECT_ROOT / "assets" / "pic1.png"
+AUTHOR_IMAGE_URL = "https://raw.githubusercontent.com/okonp07/AfroGen-AI/main/assets/pic1.png"
 backend = create_backend(
     name=app_config["backend"],
     image_size=app_config["image_size"],
@@ -376,12 +376,12 @@ with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS
                 with gr.Column(scale=3):
                     gr.Markdown(ABOUT_AUTHOR_MARKDOWN)
                 with gr.Column(scale=2, elem_id="author-image"):
-                    gr.Image(
-                        value=str(author_image),
-                        show_label=False,
-                        interactive=False,
-                        container=False,
-                        elem_classes=["author-image-media"],
+                    gr.HTML(
+                        f"""
+                        <div class="author-image-media">
+                          <img src="{AUTHOR_IMAGE_URL}" alt="Okon Prince portrait" />
+                        </div>
+                        """
                     )
 
         with gr.Row():
