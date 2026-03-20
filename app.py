@@ -89,8 +89,8 @@ Currently, I work as a Senior Data Scientist in the department of Research and D
 FOOTER_HTML = """
 <div class="footer-note">
   <div>&copy; Okon Prince, 2026</div>
-  <div>This project is based on the Mpeg-microbiome classification Zindi challenge.</div>
-  <div>enquiries; okonp07@gmail.com</div>
+  <div>This project and its codebase are provided for research purposes only and are not intended for commercial use. It is distributed under the MIT License.</div>
+  <div>For enquiries, please contact: okonp07@gmail.com</div>
 </div>
 """
 
