@@ -214,16 +214,49 @@ CUSTOM_CSS = """
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: 10px;
+  padding: 10px 14px;
   margin-right: 10px;
   margin-bottom: 8px;
   border-radius: 999px;
   background: rgba(94, 59, 140, 0.09);
   border: 1px solid rgba(94, 59, 140, 0.18);
   color: var(--afg-deep-purple);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 600;
+  cursor: default;
+  user-select: text;
+}
+
+.status-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.status-group-label {
+  color: rgba(18, 16, 21, 0.7);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-key {
+  color: rgba(47, 21, 63, 0.76);
+}
+
+.status-value {
+  font-weight: 800;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7b56ad, #2f153f);
+  box-shadow: 0 0 0 4px rgba(94, 59, 140, 0.12);
 }
 
 .hero-subcopy {
@@ -286,6 +319,16 @@ body.dark .status-pill,
   background: rgba(214, 200, 241, 0.1);
   color: #efe8fb;
   border-color: rgba(214, 200, 241, 0.18);
+}
+
+body.dark .status-group-label,
+[data-theme="dark"] .status-group-label {
+  color: rgba(242, 238, 248, 0.72);
+}
+
+body.dark .status-key,
+[data-theme="dark"] .status-key {
+  color: rgba(242, 238, 248, 0.78);
 }
 
 @media (max-width: 900px) {
@@ -355,10 +398,23 @@ with gr.Blocks(theme=gr.themes.Base(), title=app_config["title"], css=CUSTOM_CSS
                     )
                     gr.HTML(
                         f"""
-                        <div>
-                          <span class="status-pill">Backend: {backend.info.name}</span>
-                          <span class="status-pill">Load State: {backend.info.load_state}</span>
-                          <span class="status-pill">Rollout: {backend.info.rollout_state}</span>
+                        <div class="status-group-label">Deployment Snapshot</div>
+                        <div class="status-pill-row" aria-label="Current deployment status">
+                          <span class="status-pill">
+                            <span class="status-dot"></span>
+                            <span class="status-key">Backend</span>
+                            <span class="status-value">{backend.info.name}</span>
+                          </span>
+                          <span class="status-pill">
+                            <span class="status-dot"></span>
+                            <span class="status-key">Load State</span>
+                            <span class="status-value">{backend.info.load_state}</span>
+                          </span>
+                          <span class="status-pill">
+                            <span class="status-dot"></span>
+                            <span class="status-key">Rollout</span>
+                            <span class="status-value">{backend.info.rollout_state}</span>
+                          </span>
                         </div>
                         """
                     )
